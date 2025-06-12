@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Flirty Confusion Game 💘</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(45deg, #ff00cc, #3333ff, #00ff99, #ffcc00);
+            background-size: 400% 400%;
+            animation: disco 10s infinite;
+            text-align: center;
+            color: white;
+            padding: 20px;
+            min-height: 100vh;
+            margin: 0;
+            overflow-x: hidden;
+            touch-action: manipulation;
+        }
+        
+        @keyframes disco {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        h1 {
+            font-size: 1.8rem;
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+            margin: 20px 0;
+            line-height: 1.3;
+        }
+        
+        .flirt-text {
+            font-size: 1.3rem;
+            margin: 15px 0;
+            min-height: 60px;
+            font-style: italic;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+        
+        .page {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 40px);
+            padding-bottom: 60px;
+        }
+        
+        .btn-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+        
+        button {
+            background: #25D366;
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 10px 0;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: all 0.2s;
+            width: 100%;
+            -webkit-appearance: none;
+        }
+        
+        button:active {
+            transform: scale(0.95);
+        }
+        
+        .no-btn {
+            background: #ff0000;
+            position: relative;
+            transition: all 0.3s;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 10px;
+            font-size: 0.7rem;
+            background: rgba(0,0,0,0.3);
+        }
+        
+        #noCounter {
+            font-size: 0.9rem;
+            color: #ffcccc;
+            margin: 5px 0;
+        }
+        
+        input, select {
+            padding: 12px 15px;
+            font-size: 1rem;
+            border-radius: 25px;
+            border: none;
+            margin: 8px 0;
+            width: 100%;
+            max-width: 280px;
+            text-align: center;
+        }
+        
+        .whatsapp-btn {
+            background: #075E54;
+        }
+        
+        .input-group {
+            width: 100%;
+            max-width: 280px;
+            margin: 15px auto;
+        }
+        
+        .gender-btn {
+            margin: 8px 0;
+            background: #8800ff;
+        }
+        
+        /* Mobile-specific adjustments */
+        @media (max-height: 600px) {
+            h1 {
+                font-size: 1.5rem;
+                margin: 10px 0;
+            }
+            .flirt-text {
+                font-size: 1.1rem;
+                min-height: 50px;
+            }
+            .page {
+                padding-bottom: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- GENDER SELECTION PAGE -->
+    <div id="genderPage" class="page">
+        <h1>First things first...</h1>
+        <p>What's your vibe today? 💁‍♂️</p>
+        <div class="btn-container">
+            <button class="gender-btn" onclick="setGender('female')">FEMALE 👸</button>
+            <button class="gender-btn" onclick="setGender('male')">MALE 🤴</button>
+            <button class="gender-btn" onclick="setGender('bts')">BTS ARMY 💜</button>
+            <button class="gender-btn" onclick="setGender('other')">OTHER 🌈</button>
+        </div>
+    </div>
+    
+    <!-- SENDER INFO PAGE -->
+    <div id="senderPage" class="page hidden">
+        <h1>Who sent you this? 😏</h1>
+        <div class="input-group">
+            <input type="text" id="senderName" placeholder="Their name" autocapitalize="words">
+            <input type="tel" id="senderNumber" placeholder="Their WhatsApp (optional)" inputmode="tel">
+        </div>
+        <div class="btn-container">
+            <button onclick="saveSender()">LET'S FLIRT! 💘</button>
+        </div>
+    </div>
+    
+    <!-- PAGE 1 -->
+    <div id="page1" class="page hidden">
+        <h1>Do you believe in love? 💖</h1>
+        <div class="flirt-text" id="flirt1"></div>
+        <div class="btn-container">
+            <button onclick="showPage(2)">YES! ALWAYS! 😍</button>
+            <button class="no-btn" id="noBtn1" onclick="runAway('noBtn1')">NO! NEVER! 😠</button>
+        </div>
+    </div>
+    
+    <!-- PAGE 2 -->
+    <div id="page2" class="page hidden">
+        <h1>Can I steal a kiss? 💋</h1>
+        <div class="flirt-text" id="flirt2"></div>
+        <div class="btn-container">
+            <button onclick="showPage(3)">TAKE MORE! 😘</button>
+            <button class="no-btn" id="noBtn2" onclick="runAway('noBtn2')">EW NO! 🤢</button>
+        </div>
+    </div>
+    
+    <!-- PAGE 3 -->
+    <div id="page3" class="page hidden">
+        <h1>Last chance to escape! 😅</h1>
+        <div class="flirt-text" id="flirt3"></div>
+        <div class="btn-container">
+            <button onclick="showPage(4)">OKAY FINE! 👍</button>
+            <button class="no-btn" id="noBtn3" onclick="runAway('noBtn3')">NEVER! 😤</button>
+        </div>
+    </div>
+    
+    <!-- PAGE 4 (Special NO button) -->
+    <div id="page4" class="page hidden">
+        <h1>Still trying to say no? 😈</h1>
+        <div class="flirt-text">You can't resist forever...</div>
+        <div id="noCounter">NO attempts left: 5</div>
+        <div class="btn-container">
+            <button onclick="showPage(5)">I SURRENDER! 🏳️</button>
+            <button class="no-btn" id="noBtn4" onclick="specialNoClick()">NO! (TRY ME)</button>
+        </div>
+    </div>
+    
+    <!-- PAGE 5 (Final) -->
+    <div id="page5" class="page hidden">
+        <h1>You finally said YES! 🎉</h1>
+        <div class="flirt-text" id="finalFlirt"></div>
+        <div class="btn-container">
+            <button onclick="messageAhsan()" class="whatsapp-btn">WHATSAPP AHSAN 💌</button>
+            <button onclick="messageSender()" class="whatsapp-btn">TEASE THE SENDER 😈</button>
+        </div>
+    </div>
+    
+    <footer>
+        Created by Ahsan Nadeem (+92 329 4091329) | Ultimate Flirt Machine 💘
+    </footer>
+
+    <script>
+        let noCount = 0;
+        let senderData = {
+            name: "",
+            number: ""
+        };
+        let userGender = "";
+        
+        // Flirt messages by gender
+        const flirtMessages = {
+            female: [
+                "Your smile is brighter than my future! ☀️",
+                "Are you made of grapes? Because you're fine as wine! 🍷",
+                "Is your name Wi-Fi? Because I'm feeling a connection! 📶",
+                "You must be a magician, because when I look at you, everyone else disappears! ✨"
+            ],
+            male: [
+                "Hey handsome, are you made of copper and tellurium? Because you're Cu-Te! 😏",
+                "Do you have a Band-Aid? I just scraped my knee falling for you! 🩹",
+                "Are you a bank loan? Because you have my interest! 💰",
+                "Is your name Google? Because you have everything I've been searching for! 🔍"
+            ],
+            bts: [
+                "BTS may be gay, but you're fabulous! 🌈",
+                "ARMY or not, I'd stan you any day! 💜",
+                "More confusing than BTS lore! 🎥",
+                "You're my bias wrecker! 😍"
+            ],
+            other: [
+                "Are you a rainbow? Because you light up my world! 🌈",
+                "Is your love like pi? Irrational and never-ending! π",
+                "Are you a keyboard? Because you're just my type! ⌨️",
+                "Do you believe in love at first sight, or should I walk by again? 😉"
+            ]
+        };
+        
+        // Set gender and show sender page
+        function setGender(gender) {
+            userGender = gender;
+            document.getElementById('genderPage').classList.add('hidden');
+            document.getElementById('senderPage').classList.remove('hidden');
+            
+            // Special BTS effect
+            if (gender === 'bts') {
+                setTimeout(() => {
+                    document.getElementById('senderPage').querySelector('h1').textContent = "Who sent you this, ARMY? 💜";
+                }, 300);
+            }
+        }
+        
+        // Save sender info
+        function saveSender() {
+            senderData.name = document.getElementById('senderName').value.trim();
+            senderData.number = document.getElementById('senderNumber').value.trim();
+            
+            if (!senderData.name) {
+                alert("Please enter at least a name!");
+                return;
+            }
+            
+            document.getElementById('senderPage').classList.add('hidden');
+            document.getElementById('page1').classList.remove('hidden');
+            updateFlirtMessages();
+        }
+        
+        // Update all flirt messages based on gender
+        function updateFlirtMessages() {
+            const flirts = flirtMessages[userGender] || flirtMessages.other;
+            
+            for (let i = 1; i <= 3; i++) {
+                const element = document.getElementById(`flirt${i}`);
+                if (element) {
+                    element.textContent = flirts[Math.min(i-1, flirts.length-1)];
+                }
+            }
+            
+            // Special final message for BTS
+            if (userGender === 'bts') {
+                document.getElementById('finalFlirt').textContent = "Now let's stream 'Dynamite' together! 💃";
+            } else {
+                document.getElementById('finalFlirt').textContent = "This was inevitable from the start! 😉";
+            }
+        }
+        
+        // Make NO buttons run away when clicked (mobile optimized)
+        function runAway(btnId) {
+            const btn = document.getElementById(btnId);
+            const maxX = window.innerWidth - btn.offsetWidth;
+            const maxY = window.innerHeight - btn.offsetHeight;
+            
+            const x = Math.random() * maxX;
+            const y = Math.random() * maxY;
+            
+            btn.style.position = 'absolute';
+            btn.style.left = x + 'px';
+            btn.style.top = y + 'px';
+            
+            // Prevent keyboard popup on mobile
+            document.activeElement.blur();
+        }
+        
+        // Special NO button on page 4
+        function specialNoClick() {
+            noCount++;
+            const attemptsLeft = 5 - noCount;
+            document.getElementById('noCounter').textContent = `NO attempts left: ${attemptsLeft}`;
+            
+            if (noCount >= 5) {
+                const btn = document.getElementById('noBtn4');
+                btn.style.display = 'none';
+                document.getElementById('noCounter').textContent = "NO button disabled! 😭";
+            } else {
+                runAway('noBtn4');
+            }
+        }
+        
+        // Show next page
+        function showPage(pageNum) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.add('hidden');
+            });
+            document.getElementById(`page${pageNum}`).classList.remove('hidden');
+            window.scrollTo(0, 0);
+        }
+        
+        // Message Ahsan
+        function messageAhsan() {
+            window.location.href = 'https://wa.me/923294091329';
+        }
+        
+        // Message sender with "I'll date you" message
+        function messageSender() {
+            if (senderData.number) {
+                let message;
+                
+                if (userGender === 'bts') {
+                    message = `*Hey ${senderData.name}! does this mean we're dating now? 💜 Let's make it official!*`;
+                } else {
+                    message = `*Hey ${senderData.name}! I've decided... I'll date you! 😘* `;
+                }
+                
+                window.location.href = `https://wa.me/${senderData.number.replace(/^\+/, '')}?text=${encodeURIComponent(message)}`;
+            } else {
+                alert(`No WhatsApp number saved for ${senderData.name}`);
+            }
+        }
+        
+        // Better mobile touch handling
+        document.addEventListener('touchstart', function(){}, {passive: true});
+    </script>
+</body>
+</html>
